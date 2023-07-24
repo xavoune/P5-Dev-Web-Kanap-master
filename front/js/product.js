@@ -58,12 +58,12 @@ const buttonAddToCart = document.getElementById("addToCart");
 buttonAddToCart.addEventListener("click", addToCart)
 
 function addToCart() {
-    
+
 
     //création d'un tableau avec id / couleur / quantité
     const idProduct = getId();
     const colorProduct = document.getElementById("colors").value;
-    const quantityProduct = document.getElementById("quantity").value;
+    const quantityProduct = parseInt(document.getElementById("quantity").value);
 
     console.log(idProduct)
     console.log(colorProduct)
@@ -73,33 +73,36 @@ function addToCart() {
         alert("veuillez choisir une couleur")
         return;
     }
-    
-    if (quantityProduct > 100 || quantityProduct <= 0){
+
+    if (quantityProduct > 100 || quantityProduct <= 0) {
         alert("veillez rentrer une valeur comprise entre 1 et 100")
         return
     }
 
     let product = {
-        "id" : idProduct,
-        "color" : colorProduct,
-        "quantity" : quantityProduct,
+        "id": idProduct,
+        "color": colorProduct,
+        "quantity": quantityProduct,
     }
 
-    let basket =[]
-    
-    if (localStorage.getItem("basketLS")){
-        alert("Le local storage existe")
-        basket = JSON.parse(localStorage.getItem("basketLS"))  
+    let basket = []
+
+    if (localStorage.getItem("basketLS"))
+        basket = JSON.parse(localStorage.getItem("basketLS"))
+
+    const posProduct = basket.findIndex(element => idProduct === element.id && colorProduct === element.color)
+
+
+
+    if (posProduct !== -1) {
+        // alert("Le local storage existe")
         console.log(basket)
-        const posProduct = basket.findIndex(element => idProduct == element.id && colorProduct == element.color)
-        element.quantity++
         console.log(posProduct)
-    }else{
+        basket[posProduct].quantity += quantityProduct
+    } else {
         basket.push(product)
     }
-    
+
     localStorage.setItem("basketLS", JSON.stringify(basket))
-    
+
 }
-
-
