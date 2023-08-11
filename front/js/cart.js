@@ -136,15 +136,12 @@ async function generateCart(cartItems) {
       const cartHtml = await displayCart(cartItem);
       console.log(cartItem)
       document.getElementById("cart__items").appendChild(cartHtml);
-
   }
 }
 
 generateCart(cartItems)
 
-console.log(cartItems[0].quantity)
-
-//calcul et affichage du prix du panier
+//calcul du prix du panier
 async function calculPrix(cartItems) {
   let prixTotal = 0;
 
@@ -156,3 +153,31 @@ async function calculPrix(cartItems) {
   return prixTotal;
 
 }
+
+calculPrix(cartItems)
+
+//affichage du prix
+async function displayPrice(cartItems){
+  let price = await calculPrix(cartItems)
+  let priceSpan = document.getElementById("totalPrice")
+  priceSpan.textContent = price
+}
+
+displayPrice(cartItems)
+
+//tenter de fusionner les deux fonction pour n'en faire qu'une seule par la suite 
+
+
+//affichage de la quantité
+function displayQuantity(cartItems) {
+  let totalQuantity = 0;
+
+  for (let cartItem of cartItems) {
+    totalQuantity += cartItem.quantity;
+  }
+
+  let quantitySpan = document.getElementById("totalQuantity");
+  quantitySpan.textContent = totalQuantity;
+}
+
+displayQuantity(cartItems);
