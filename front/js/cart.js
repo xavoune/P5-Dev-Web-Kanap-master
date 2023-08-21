@@ -4,9 +4,14 @@ const cartItems = JSON.parse(localStorage.getItem("basketLS"));
 //fonction pour récupérer les données fournies par l'API en fonction de l'id du produit
 //utilisation de la méthode async pour attendre la récupération des infos avant d'exécuter la suite du code
 async function getInfoAPI (id){
-  let api = await fetch('http://localhost:3000/api/products/' + id)
-  api = await api.json()
-  return api
+  try { 
+    let api = await fetch('http://localhost:3000/api/products/' + id)
+    api = await api.json()
+    return api
+  }catch(error){
+    console.error(error)
+  }
+  
 }
 
 /** 
@@ -102,6 +107,14 @@ async function displayCart(product){
   inputItemQuantity.name = "itemQuantity"
   inputItemQuantity.value = product.quantity
 
+  // Ajouter un gestionnaire d'événement input
+  inputItemQuantity.addEventListener("input", (event) => {
+    const newQuantity = parseInt(event.target.value, 10);
+
+  // Mettre à jour la quantité dans le local storage
+   updateQuantityInLocalStorage(product.id, newQuantity);
+  });
+
   divSettingsQuantity.appendChild(inputItemQuantity)
 
   //<div class="cart__item__content__settings__delete">
@@ -114,6 +127,8 @@ async function displayCart(product){
   const deleteItem = document.createElement("p")
   deleteItem.classList.add("deleteItem")
   deleteItem.innerText = "Supprimer"
+  deleteItem.addEventListener("click", () => supprimerItem(product.id))
+
 
   deleteButtonDiv.appendChild(deleteItem)
 
@@ -141,6 +156,15 @@ async function generateCart(cartItems) {
 
 generateCart(cartItems)
 
+/** 
+ * @summary Calcul du prix + affichage et affichage quantité totale 
+ * 
+ * @param {int} cartItems données du localStorage convertie en JSON
+ * 
+ * @example displayCartSummary(cartItems)
+ * 
+*/
+
 //calcul du prix du panier
 async function displayCartSummary(cartItems) {
   let totalQuantity = 0;
@@ -160,3 +184,43 @@ async function displayCartSummary(cartItems) {
 }
 
 displayCartSummary(cartItems);
+
+
+// //suppression d'un produit du panier
+async function supprimerItem(itemId) {
+  // Récupérer les produits du panier depuis le local storage
+  const cartItems = JSON.parse(localStorage.getItem("basketLS"));
+
+  // Trouver l'index de l'élément à supprimer dans le tableau
+  const index = cartItems.findIndex(item => item.id === itemId);
+
+  if (index !== -1) {
+    // Supprimer l'élément du tableau
+    cartItems.splice(index, 1);
+
+    // Mettre à jour le local storage avec le nouveau tableau
+    localStorage.setItem("basketLS", JSON.stringify(cartItems));
+
+    // Recharger la page pour afficher le panier mis à jour
+    location.reload();
+  }
+}
+
+function updateQuantityInLocalStorage(productId, newQuantity) {
+  // Récupérer les produits du panier depuis le local storage
+  const cartItems = JSON.parse(localStorage.getItem("basketLS"));
+
+  // Mettre à jour la quantité du produit correspondant
+  const updatedCartItems = cartItems.map(item => {
+    if (item.id === productId) {
+      item.quantity = newQuantity;
+    }
+    return item;
+  });
+
+  // Mettre à jour le local storage avec le tableau mis à jour
+  localStorage.setItem("basketLS", JSON.stringify(updatedCartItems));
+
+  // Mettre à jour l'affichage du panier avec la nouvelle quantité
+  displayCartSummary(updatedCartItems);
+}
