@@ -224,3 +224,59 @@ function updateQuantityInLocalStorage(productId, newQuantity) {
   // Mettre à jour l'affichage du panier avec la nouvelle quantité
   displayCartSummary(updatedCartItems);
 }
+
+//Formulaire
+
+function getInfoFromForm (){
+
+  const form = document.querySelector('form');
+
+  form.addEventListener("submit", (event) => {
+    // On empêche le comportement par défaut
+    event.preventDefault();
+    console.log("Il n’y a pas eu de rechargement de page");
+    
+    // Récupération info Prénom
+    let baliseFirstName = document.getElementById("firstName")
+    let firstName = baliseFirstName.value
+      console.log(firstName)
+    let regexName = new RegExp("^[A-Za-zÀ-ÿ]+(?:[-\s][A-Za-zÀ-ÿ]+)?$");
+    let resultatName = regexName.test(firstName);
+      console.log(resultatName);
+
+    // Récupération info Nom
+    let basliseLastName = document.getElementById("lastName")
+    let lastName = basliseLastName.value
+      console.log(lastName)
+    regexName = new RegExp("^[A-Za-zÀ-ÿ]+(?:[-\s][A-Za-zÀ-ÿ]+)?$");
+    resultatName = regexName.test(lastName);
+      console.log(resultatName);
+
+    // Récupération adresse
+    let baliseAddress = document.getElementById("address")
+    let address = baliseAddress.value
+      console.log(address)
+    let regexAddress = new RegExp("^[0-9]+\\s[A-Za-zÀ-ÿ-\\s]+$");
+    let resultatAddress = regexAddress.test(address);
+      console.log(resultatAddress);
+
+    // Récupération info ville
+    let baliseCity = document.getElementById("city")
+    let city = baliseCity.value
+      console.log(city)
+    let regexCity = new RegExp("^[A-Za-zÀ-ÿ]+(?:-[A-Za-zÀ-ÿ]+)*$");
+    let resultatCity = regexCity.test(city);
+      console.log(resultatCity);
+
+    // Récupération info email
+    let baliseEmail = document.getElementById("email")
+    let email = baliseEmail.value 
+      console.log(email)
+    let regexEmail = new RegExp("[a-z0-9._-]+@[a-z0-9._-]+\.[a-z0-9._-]+");
+    let resultatEmail = regexEmail.test(email);
+      console.log(resultatEmail);
+ 
+  });
+}
+
+getInfoFromForm()
