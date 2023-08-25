@@ -243,6 +243,12 @@ function getInfoFromForm (){
     let regexName = new RegExp("^[A-Za-zÀ-ÿ]+(?:[-\s][A-Za-zÀ-ÿ]+)?$");
     let resultatName = regexName.test(firstName);
       console.log(resultatName);
+      if (resultatName == true){
+        console.log("le champ est bien rempli")
+      } else {
+        const firstNameError = document.getElementById("firstNameErrorMsg")
+        firstNameError.textContent = `Le champ "Prénom" ne peut contenir que des lettres !`
+      }
 
     // Récupération info Nom
     let basliseLastName = document.getElementById("lastName")
@@ -251,6 +257,12 @@ function getInfoFromForm (){
     regexName = new RegExp("^[A-Za-zÀ-ÿ]+(?:[-\s][A-Za-zÀ-ÿ]+)?$");
     resultatName = regexName.test(lastName);
       console.log(resultatName);
+      if (resultatName == true){
+        console.log("le champ est bien rempli")
+      } else {
+        const lastNameError = document.getElementById("lastNameErrorMsg")
+        lastNameError.textContent = `Le champ "Nom" ne peut contenir que des lettres !`
+      }
 
     // Récupération adresse
     let baliseAddress = document.getElementById("address")
@@ -259,6 +271,12 @@ function getInfoFromForm (){
     let regexAddress = new RegExp("^[0-9]+\\s[A-Za-zÀ-ÿ-\\s]+$");
     let resultatAddress = regexAddress.test(address);
       console.log(resultatAddress);
+      if (resultatAddress == true){
+        console.log("le champ est bien rempli")
+      } else {
+        const addressError = document.getElementById("addressErrorMsg")
+        addressError.textContent = `Le champ "Adresse" est mal renseigné !`
+      }
 
     // Récupération info ville
     let baliseCity = document.getElementById("city")
@@ -267,6 +285,12 @@ function getInfoFromForm (){
     let regexCity = new RegExp("^[A-Za-zÀ-ÿ]+(?:-[A-Za-zÀ-ÿ]+)*$");
     let resultatCity = regexCity.test(city);
       console.log(resultatCity);
+      if (resultatCity == true){
+        console.log("le champ est bien rempli")
+      } else {
+        const cityError = document.getElementById("cityErrorMsg")
+        cityError.textContent = `Le champ "Ville" ne peut contenir que des lettres et les nom de villes composées doivent être séparés par un "-" !`
+      }
 
     // Récupération info email
     let baliseEmail = document.getElementById("email")
@@ -275,8 +299,28 @@ function getInfoFromForm (){
     let regexEmail = new RegExp("[a-z0-9._-]+@[a-z0-9._-]+\.[a-z0-9._-]+");
     let resultatEmail = regexEmail.test(email);
       console.log(resultatEmail);
- 
+      if (resultatEmail == true){
+        console.log("le champ est bien rempli")
+      } else {
+        const emailError = document.getElementById("emailErrorMsg")
+        emailError.textContent = `Le champ "Email" doit être bien renseigné !`
+      }
+    
+    const contact = {
+      firstName: firstName,
+      lastName: lastName,
+      address: address,
+      city: city,
+      email: email
+    }
+
+    let basketOrder = [
+      
+    ]
+
+    console.log(contact)
   });
 }
 
 getInfoFromForm()
+
