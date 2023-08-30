@@ -1,3 +1,10 @@
+/** 
+ * @summary Récupère l'id de la commande et l'affiche sur la page web
+ * 
+ * @example getOrderId()
+ * 
+*/
+
 // Fonction d'initialisation
 function getOrderId() {
     // Récupérer le numéro de commande depuis l'URL
