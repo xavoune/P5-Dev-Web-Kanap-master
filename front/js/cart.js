@@ -227,100 +227,92 @@ function updateQuantityInLocalStorage(productId, newQuantity) {
 
 //Formulaire
 
-function getInfoFromForm (){
+function validateInput(inputElement, regex, errorElement, errorMessage) {
+  let value = inputElement.value;
+  console.log(value);
+  let result = regex.test(value);
+  console.log(result);
+  
+  if (result) {
+    console.log("Le champ est bien rempli");
+    errorElement.textContent = "";
+  } else {
+    errorElement.textContent = errorMessage;
+  }
 
+  return result;
+}
+
+function getInfoFromForm() {
   const form = document.querySelector('form');
 
   form.addEventListener("submit", (event) => {
-    // On empêche le comportement par défaut
     event.preventDefault();
     console.log("Il n’y a pas eu de rechargement de page");
-    
-    // Récupération info Prénom
-    let baliseFirstName = document.getElementById("firstName")
-    let firstName = baliseFirstName.value
-      console.log(firstName)
-    let regexName = new RegExp("^[A-Za-zÀ-ÿ]+(?:[-\s][A-Za-zÀ-ÿ]+)?$");
-    let resultatName = regexName.test(firstName);
-      console.log(resultatName);
-      if (resultatName == true){
-        console.log("le champ est bien rempli")
-      } else {
-        const firstNameError = document.getElementById("firstNameErrorMsg")
-        firstNameError.textContent = `Le champ "Prénom" ne peut contenir que des lettres !`
-      }
 
-    // Récupération info Nom
-    let basliseLastName = document.getElementById("lastName")
-    let lastName = basliseLastName.value
-      console.log(lastName)
-    regexName = new RegExp("^[A-Za-zÀ-ÿ]+(?:[-\s][A-Za-zÀ-ÿ]+)?$");
-    resultatName = regexName.test(lastName);
-      console.log(resultatName);
-      if (resultatName == true){
-        console.log("le champ est bien rempli")
-      } else {
-        const lastNameError = document.getElementById("lastNameErrorMsg")
-        lastNameError.textContent = `Le champ "Nom" ne peut contenir que des lettres !`
-      }
+    const firstNameError = document.getElementById("firstNameErrorMsg");
+    const lastNameError = document.getElementById("lastNameErrorMsg");
+    const addressError = document.getElementById("addressErrorMsg");
+    const cityError = document.getElementById("cityErrorMsg");
+    const emailError = document.getElementById("emailErrorMsg");
 
-    // Récupération adresse
-    let baliseAddress = document.getElementById("address")
-    let address = baliseAddress.value
-      console.log(address)
-    let regexAddress = new RegExp("^[0-9]+\\s[A-Za-zÀ-ÿ-\\s]+$");
-    let resultatAddress = regexAddress.test(address);
-      console.log(resultatAddress);
-      if (resultatAddress == true){
-        console.log("le champ est bien rempli")
-      } else {
-        const addressError = document.getElementById("addressErrorMsg")
-        addressError.textContent = `Le champ "Adresse" est mal renseigné !`
-      }
+    let isValid = true;
 
-    // Récupération info ville
-    let baliseCity = document.getElementById("city")
-    let city = baliseCity.value
-      console.log(city)
-    let regexCity = new RegExp("^[A-Za-zÀ-ÿ]+(?:-[A-Za-zÀ-ÿ]+)*$");
-    let resultatCity = regexCity.test(city);
-      console.log(resultatCity);
-      if (resultatCity == true){
-        console.log("le champ est bien rempli")
-      } else {
-        const cityError = document.getElementById("cityErrorMsg")
-        cityError.textContent = `Le champ "Ville" ne peut contenir que des lettres et les nom de villes composées doivent être séparés par un "-" !`
-      }
+    isValid &= validateInput(
+      document.getElementById("firstName"),
+      /^[A-Za-zÀ-ÿ]+(?:[-\s][A-Za-zÀ-ÿ]+)?$/,
+      firstNameError,
+      "Le champ \"Prénom\" ne peut contenir que des lettres !"
+    );
 
-    // Récupération info email
-    let baliseEmail = document.getElementById("email")
-    let email = baliseEmail.value 
-      console.log(email)
-    let regexEmail = new RegExp("[a-z0-9._-]+@[a-z0-9._-]+\.[a-z0-9._-]+");
-    let resultatEmail = regexEmail.test(email);
-      console.log(resultatEmail);
-      if (resultatEmail == true){
-        console.log("le champ est bien rempli")
-      } else {
-        const emailError = document.getElementById("emailErrorMsg")
-        emailError.textContent = `Le champ "Email" doit être bien renseigné !`
-      }
-    
-    const contact = {
-      firstName: firstName,
-      lastName: lastName,
-      address: address,
-      city: city,
-      email: email
+    isValid &= validateInput(
+      document.getElementById("lastName"),
+      /^[A-Za-zÀ-ÿ]+(?:[-\s][A-Za-zÀ-ÿ]+)?$/,
+      lastNameError,
+      "Le champ \"Nom\" ne peut contenir que des lettres !"
+    );
+
+    isValid &= validateInput(
+      document.getElementById("address"),
+      /^[0-9]+\s[A-Za-zÀ-ÿ-\\s]+/,
+      addressError,
+      "Le champ \"Adresse\" est mal renseigné !"
+    );
+
+    isValid &= validateInput(
+      document.getElementById("city"),
+      /^[A-Za-zÀ-ÿ]+(?:-[A-Za-zÀ-ÿ]+)*$/,
+      cityError,
+      "Le champ \"Ville\" ne peut contenir que des lettres et les noms de villes composées doivent être séparés par un \"-\" !"
+    );
+
+    isValid &= validateInput(
+      document.getElementById("email"),
+      /^[a-z0-9._-]+@[a-z0-9._-]+\.[a-z]{2,3}$/,
+      emailError,
+      "Le champ \"Email\" doit être bien renseigné !"
+    );
+
+    if (isValid) {
+      const contact = {
+        firstName: document.getElementById("firstName").value,
+        lastName: document.getElementById("lastName").value,
+        address: document.getElementById("address").value,
+        city: document.getElementById("city").value,
+        email: document.getElementById("email").value
+      };
+
+      let basketOrder = [];
+
+      console.log(contact);
     }
-
-    let basketOrder = [
-      
-    ]
-
-    console.log(contact)
   });
 }
 
 getInfoFromForm()
 
+// Prénom : "^[A-Za-zÀ-ÿ]+(?:[-\s][A-Za-zÀ-ÿ]+)?$"
+// Nom : "^[A-Za-zÀ-ÿ]+(?:[-\s][A-Za-zÀ-ÿ]+)?$"
+// Adresse : "^[0-9]+\\s[A-Za-zÀ-ÿ-\\s]+$"
+// Ville : "^[A-Za-zÀ-ÿ]+(?:-[A-Za-zÀ-ÿ]+)*$"
+// Email : (/^[a-z0-9._-]+@[a-z0-9._-]+\.[a-z]{2,3}$/)
