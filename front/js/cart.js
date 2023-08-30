@@ -3,21 +3,21 @@ const cartItems = JSON.parse(localStorage.getItem("basketLS"));
 
 //fonction pour récupérer les données fournies par l'API en fonction de l'id du produit
 //utilisation de la méthode async pour attendre la récupération des infos avant d'exécuter la suite du code
-async function getInfoAPI (id){
-  try { 
+async function getInfoAPI(id) {
+  try {
     let api = await fetch('http://localhost:3000/api/products/' + id)
     api = await api.json()
     return api
-  }catch(error){
+  } catch (error) {
     console.error(error)
   }
-  
+
 }
 
 /** 
  * @summary Génère la construction d'un produit en HTML 
  * 
- * @param {int} product produit stocké dans le localStorage
+ * @param {string} product produit stocké dans le localStorage
  * 
  * @example displayCart(product)
  * 
@@ -25,7 +25,7 @@ async function getInfoAPI (id){
 
 //fonction pour générer le HTML de chaque article du panier
 //utilisation de la méthode async car certaines infos viennent de l'API
-async function displayCart(product){
+async function displayCart(product) {
 
   //récupération info API pour affichage
   let infoAPI = await getInfoAPI(product.id)
@@ -53,15 +53,15 @@ async function displayCart(product){
   //<div class="cart__item__content">
   const divCartContent = document.createElement("div")
   divCartContent.classList.add("cart__item__content")
-        
+
   articleCart.appendChild(divCartContent)
 
   //<div class="cart__item__content__description">
   const divCartDesc = document.createElement("div")
   divCartDesc.classList.add("cart__item__content__description")
-        
+
   divCartContent.appendChild(divCartDesc)
-                    
+
   //<h2>Nom du produit</h2>
   const h2TitleProduct = document.createElement('h2')
   h2TitleProduct.innerText = infoAPI.name
@@ -71,17 +71,17 @@ async function displayCart(product){
   //<p>Vert</p>
   const colorProduct = document.createElement("p")
   colorProduct.innerText = product.color
-                    
+
   divCartDesc.appendChild(colorProduct)
 
   //<p>42,00 €</p>
   const priceProduct = document.createElement("p")
   priceProduct.innerText = infoAPI.price + " €"
-                    
+
   divCartDesc.appendChild(priceProduct)
-                
+
   //<div class="cart__item__content__settings">
-  const divSettings =  document.createElement("div")
+  const divSettings = document.createElement("div")
   divSettings.classList.add("cart__item__content__settings")
 
   divCartContent.appendChild(divSettings)
@@ -89,7 +89,7 @@ async function displayCart(product){
   //<div class="cart__item__content__settings__quantity">
   const divSettingsQuantity = document.createElement("div")
   divSettingsQuantity.classList.add("cart__item__content__settings__quantity")
-        
+
   divSettings.appendChild(divSettingsQuantity)
 
   //<p>Qté : </p>
@@ -101,7 +101,7 @@ async function displayCart(product){
   //<input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="42">
   const inputItemQuantity = document.createElement("input")
   inputItemQuantity.classList.add("itemQuantity")
-  inputItemQuantity.type ="number"
+  inputItemQuantity.type = "number"
   inputItemQuantity.min = "1"
   inputItemQuantity.max = "100"
   inputItemQuantity.name = "itemQuantity"
@@ -111,8 +111,8 @@ async function displayCart(product){
   inputItemQuantity.addEventListener("input", (event) => {
     const newQuantity = parseInt(event.target.value, 10);
 
-  // Mettre à jour la quantité dans le local storage
-   updateQuantityInLocalStorage(product.id, newQuantity);
+    // Mettre à jour la quantité dans le local storage
+    updateQuantityInLocalStorage(product.id, newQuantity);
   });
 
   divSettingsQuantity.appendChild(inputItemQuantity)
@@ -120,14 +120,14 @@ async function displayCart(product){
   //<div class="cart__item__content__settings__delete">
   const deleteButtonDiv = document.createElement("div")
   deleteButtonDiv.classList.add("cart__item__content__settings__delete")
-        
+
   divSettings.appendChild(deleteButtonDiv)
 
   //<p class="deleteItem">Supprimer</p>
   const deleteItem = document.createElement("p")
   deleteItem.classList.add("deleteItem")
   deleteItem.innerText = "Supprimer"
-  deleteItem.addEventListener("click", () => supprimerItem(product.id))
+  deleteItem.addEventListener("click", () => deleteItemFromCart(product.id))
 
 
   deleteButtonDiv.appendChild(deleteItem)
@@ -138,7 +138,7 @@ async function displayCart(product){
 /** 
  * @summary Génère le HTML pour chacun des produits présents dans le localStorage 
  * 
- * @param {int} cartItems données du localStorage convertie en JSON
+ * @param {string} cartItems données du localStorage convertie en JSON
  * 
  * @example generateCart(cartItems)
  * 
@@ -148,9 +148,9 @@ async function displayCart(product){
 //utilisation de la méthode async car certaines infos viennent de l'API
 async function generateCart(cartItems) {
   for (let cartItem of cartItems) {
-      const cartHtml = await displayCart(cartItem);
-      console.log(cartItem)
-      document.getElementById("cart__items").appendChild(cartHtml);
+    const cartHtml = await displayCart(cartItem);
+    console.log(cartItem)
+    document.getElementById("cart__items").appendChild(cartHtml);
   }
 }
 
@@ -159,7 +159,7 @@ generateCart(cartItems)
 /** 
  * @summary Calcul du prix + affichage et affichage quantité totale 
  * 
- * @param {int} cartItems données du localStorage convertie en JSON
+ * @param {string} cartItems données du localStorage convertie en JSON
  * 
  * @example displayCartSummary(cartItems)
  * 
@@ -185,9 +185,17 @@ async function displayCartSummary(cartItems) {
 
 displayCartSummary(cartItems);
 
+/** 
+ * @summary Suppression d'un produit 
+ * 
+ * @param {string} itemId Id du produit du panier en question
+ * 
+ * @example deleteItemFromCart(itemId)
+ * 
+*/
 
 // //suppression d'un produit du panier
-async function supprimerItem(itemId) {
+async function deleteItemFromCart(itemId) {
   // Récupérer les produits du panier depuis le local storage
   const cartItems = JSON.parse(localStorage.getItem("basketLS"));
 
@@ -205,6 +213,16 @@ async function supprimerItem(itemId) {
     location.reload();
   }
 }
+
+/** 
+ * @summary Modifie la quantité d'un produit
+ * 
+ * @param {string} productId Id du produit du panier en question
+ * @param {int} newQuantity Nouvelle quantité
+ * 
+ * @example updateQuantityInLocalStorage(productId, newQuantity)
+ * 
+*/
 
 function updateQuantityInLocalStorage(productId, newQuantity) {
   // Récupérer les produits du panier depuis le local storage
@@ -227,12 +245,24 @@ function updateQuantityInLocalStorage(productId, newQuantity) {
 
 //Formulaire
 
+/** 
+ * @summary Vérifie la validité d'un champ du formulaire
+ * 
+ * @param {string} inputElement Champ du formulaire
+ * @param {string} regex Liste de caractère autorisés dans le champ
+ * @param {string} errorElement Balise qui contient le message d'erreur
+ * @param {string} errorMessage Message d'erreur
+ * 
+ * @example validateInput(inputElement, regex, errorElement, errorMessage)
+ * 
+*/
+
 function validateInput(inputElement, regex, errorElement, errorMessage) {
   let value = inputElement.value;
   console.log(value);
   let result = regex.test(value);
   console.log(result);
-  
+
   if (result) {
     console.log("Le champ est bien rempli");
     errorElement.textContent = "";
@@ -242,6 +272,13 @@ function validateInput(inputElement, regex, errorElement, errorMessage) {
 
   return result;
 }
+
+/** 
+ * @summary Récupère les infos des champs du formulaire
+ * 
+ * @example getInfoFromForm()
+ * 
+*/
 
 function getInfoFromForm() {
   const form = document.querySelector('form');
@@ -302,17 +339,42 @@ function getInfoFromForm() {
         email: document.getElementById("email").value
       };
 
-      let basketOrder = [];
-
       console.log(contact);
+
+      let cartItems = JSON.parse(localStorage.getItem("basketLS"));
+
+      // Extraire les IDs des produits du panier et les stocker dans un tableau
+      const basketOrder = cartItems.map(item => item.id);
+
+      console.log(basketOrder)
+
+      // Création de l'objet de données à envoyer
+      const orderData = {
+        contact: contact,
+        products: cartItems.map(item => item.id)
+      };
+
+      // Requête POST vers l'API
+      fetch('http://localhost:3000/api/products/order', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(orderData)
+      })
+        .then(response => response.json())
+        .then(orderInfo => {
+          // Ici, orderInfo contient les détails de la commande générée par l'API
+          console.log('Numéro de commande :', orderInfo.orderId);
+          window.location.href = `confirmation.html?id=${orderInfo.orderId}`;
+        })
+        .catch(error => {
+          console.error('Erreur lors de la requête POST :', error);
+        });
+
     }
   });
 }
 
 getInfoFromForm()
 
-// Prénom : "^[A-Za-zÀ-ÿ]+(?:[-\s][A-Za-zÀ-ÿ]+)?$"
-// Nom : "^[A-Za-zÀ-ÿ]+(?:[-\s][A-Za-zÀ-ÿ]+)?$"
-// Adresse : "^[0-9]+\\s[A-Za-zÀ-ÿ-\\s]+$"
-// Ville : "^[A-Za-zÀ-ÿ]+(?:-[A-Za-zÀ-ÿ]+)*$"
-// Email : (/^[a-z0-9._-]+@[a-z0-9._-]+\.[a-z]{2,3}$/)
