@@ -15,9 +15,11 @@ fetch('http://localhost:3000/api/products/' + getId())
 
     .catch(function (error) {
         console.log('erreur : ', error);
+        alert("le produit n'existe pas")
+        window.location.href = `index.html`
     })
 
-//Affichage des produits    
+    //Affichage des produits    
 function displayProduct(product) {
     console.log(product);
 
@@ -31,6 +33,7 @@ function displayProduct(product) {
     //Lien entre le id "title" et le product.name
     const title = document.getElementById("title");
     title.innerText = product.name;
+    document.title = product.name;
 
     //Lien entre le id "price" et le product.price
     const price = document.getElementById("price");
@@ -104,5 +107,7 @@ function addToCart() {
     }
 
     localStorage.setItem("basketLS", JSON.stringify(basket))
+
+    alert("Votre produit a bien été ajouté au panier !")
 
 }
