@@ -19,7 +19,7 @@ fetch('http://localhost:3000/api/products/' + getId())
         window.location.href = `index.html`
     })
 
-    //Affichage des produits    
+//Affichage des produits    
 function displayProduct(product) {
     console.log(product);
 
@@ -56,12 +56,10 @@ function displayProduct(product) {
 }
 
 //Evénement clic ajout au panier
-
 const buttonAddToCart = document.getElementById("addToCart");
 buttonAddToCart.addEventListener("click", addToCart)
 
 function addToCart() {
-
 
     //création d'un tableau avec id / couleur / quantité
     const idProduct = getId();
@@ -95,8 +93,6 @@ function addToCart() {
 
     const posProduct = basket.findIndex(element => idProduct === element.id && colorProduct === element.color)
 
-
-
     if (posProduct !== -1) {
         // alert("Le local storage existe")
         console.log(basket)
@@ -109,5 +105,5 @@ function addToCart() {
     localStorage.setItem("basketLS", JSON.stringify(basket))
 
     alert("Votre produit a bien été ajouté au panier !")
-
+    
 }

@@ -311,7 +311,7 @@ function getInfoFromForm() {
 
     isValid &= validateInput(
       document.getElementById("address"),
-      /^[0-9]+\s[A-Za-zÀ-ÿ-\\s]+/,
+      /^[0-9]+\s[A-Za-zÀ-ÿ-\\s]+$/,
       addressError,
       "Le champ \"Adresse\" est mal renseigné !"
     );

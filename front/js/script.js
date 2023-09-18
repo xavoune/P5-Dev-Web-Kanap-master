@@ -58,7 +58,6 @@ function generateProducts(products) {
         const productHtml = generateHtml(product);
         console.log(productHtml)
         document.getElementById("items").appendChild(productHtml);
-
     }
 }
 
